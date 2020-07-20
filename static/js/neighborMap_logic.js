@@ -1,8 +1,9 @@
 // Paths to the geoJSON files
 let minNbrhoods = "../static/data/Minneapolis_Neighborhoods.geojson";
 // Path to data
-let forceData = '/api/geojson';
+let useOfForceData = neighborhood_use_of_force;
 
+// Call the neighborhood data
 d3.json(minNbrhoods, function (data) {
     createFeatures(data.features)
 });
@@ -32,7 +33,7 @@ function style(feature) {
 }
 
 function createFeatures(neighborhoods) {
-    console.log(neighborhoods);
+  console.log(neighborhoods);
   // Create a GeoJSON layer for the neighborhood boundaries
     let minNeighborhoods = L.geoJSON(neighborhoods, {
     onEachFeature: function (feature, layer) {
@@ -58,10 +59,18 @@ function createMap(neighborhoods) {
       id: "mapbox/streets-v11",
       accessToken: API_KEY
       });
+
+    let darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+      attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+      maxZoom: 18,
+      id: "dark-v10",
+      accessToken: API_KEY
+    });
   
     // Define a baseMaps object to hold base layers
     let baseMaps = {
       "Street Map": streetmap,
+      "Dark Map": darkmap
     };
   
     // Create overlay object to hold our overlay layer
@@ -70,10 +79,10 @@ function createMap(neighborhoods) {
     };
   
     // Creating map object
-    let myMap = L.map("map", {
-      center: [44.96, -93.28],
-      zoom: 11.45,
-      layers: [streetmap, neighborhoods]
+    let myMap = L.map("map-neighborhood", {
+      center: [44.945, -93.27],
+      zoom: 8,
+      layers: [darkmap, neighborhoods]
     });
     
     // Create layer control

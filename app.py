@@ -60,13 +60,6 @@ def echo():
 
     return render_template("index.html", neighborhood=neighborhood)
 
-
-
-#@app.route("/neighborhoods")
-#def neighborhood_view():
-
-    #return render_template("neighbor_incidents.html")
-
 @app.route("/api/geojson")
 def welcome():
     cur.execute("select * from vw_police_use_of_force") 
