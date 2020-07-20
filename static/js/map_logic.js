@@ -84,9 +84,17 @@ function createMap(neighborhoods, policePrecints, communities) {
     accessToken: API_KEY
     });
 
+  let darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "dark-v10",
+    accessToken: API_KEY
+  });
+
   // Define a baseMaps object to hold base layers
   let baseMaps = {
     "Street Map": streetmap,
+    "Dark Map": darkmap
   };
 
   // Create overlay object to hold our overlay layer
@@ -98,9 +106,9 @@ function createMap(neighborhoods, policePrecints, communities) {
 
   // Creating map object
   let myMap = L.map("map", {
-    center: [44.96, -93.28],
-    zoom: 11.45,
-    layers: [streetmap, neighborhoods]
+    center: [44.95, -93.27],
+    zoom: 13,
+    layers: [darkmap, neighborhoods]
   });
 
   // Create the markers for Police incidents
