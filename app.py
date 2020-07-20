@@ -78,7 +78,7 @@ def welcome():
 
 @app.route("/api/nbh_bubble")
 def nbh_bubble():
-    cur.execute("select * from force_nbh_stats") 
+    cur.execute("select * from vw_force_nbh_stats where neighborhood_name <>'Downtown West';") 
     columns = [col[0] for col in cur.description]
     nbh_stats = [dict(zip(columns, row)) for row in cur.fetchall()]
     return jsonify(nbh_stats) 
