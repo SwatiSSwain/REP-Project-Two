@@ -57,8 +57,7 @@ let height = svgHeight - margin.top - margin.bottom;
 
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
-let svg = d3.select("body")
-  .select("#scatter")  
+let svg = d3.select("#scatter")  
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight)
@@ -69,7 +68,7 @@ let chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Initial Params for X and Y axis
-let chosenXAxis = "police_use_of_force_cnt";
+let chosenXAxis = "race_use_of_force";
 let chosenYAxis = "police_use_of_force_cnt";
 
 // function used for updating x-scale let upon click on axis label
@@ -149,38 +148,36 @@ function updateToolTip(chosenXAxis,chosenYAxis, circlesGroup) {
 //select x label
   let label="";
   
-  if (chosenXAxis === "poverty") {
-    label = "Poverty: ";
+  if (chosenXAxis === "race_use_of_force") {
+    label = "Subject Race: ";
   }
-  else if (chosenXAxis === "age") {
-      label = "Age: "
+  else if (chosenXAxis === "race_neighborhood") {
+      label = "Neighborhood Demographics: "
   }
-  else if (chosenXAxis === "income"){
+  else if (chosenXAxis === "median_income"){
     label = "Household Income: ";
   }
   
 //select y label
   let yLabel="";  
   
-  if (chosenYAxis === "healthcare") {
-    yLabel = "Lacks Healthcare: ";
+  if (chosenYAxis === "police_use_of_force_cnt") {
+    yLabel = "Use of Force Cases: ";
   }
-  else if (chosenYAxis === "smokes") {
-      yLabel = "Smokes: "
+  else if (chosenYAxis === "cases_count") {
+      yLabel = "Police Incidents: "
   }
-  else if (chosenYAxis === "obesity") {
-    yLabel = "Obesity: ";
-  }
+  
 
   let toolTip = d3.tip()
     .attr("class", "d3-tip")
     .offset([80, -60])
     .html(function(d) {
-      if (chosenXAxis === "poverty") {
-        return (`${d.state}<br>${label} ${d[chosenXAxis]}%<br>${yLabel} ${d[chosenYAxis]}%`)
+      if (chosenXAxis === "race_use_of_force") {
+        return (`${d.neighborhood_name}<br>${label} ${d[chosenXAxis]}%<br>${yLabel} ${d[chosenYAxis]}%`)
       }
       else {
-        return (`${d.state}<br>${label} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}%`)
+        return (`${d.neighborhood_name}<br>${label} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}%`)
       }
     });
 
@@ -205,12 +202,11 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
   // parse data and convert strint to int
 
   data.forEach(function(stateData) {
-    stateData.poverty = +stateData.poverty;
-    stateData.age = +stateData.age;
-    stateData.income = +stateData.income;
-    stateData.healthcare = +stateData.healthcare;
-    stateData.obesity = +stateData.obesity;
-    stateData.smokes = +stateData.smokes;
+    stateData.race_use_of_force = +stateData.race_use_of_force;
+    stateData.police_use_of_force_cnt = +stateData.police_use_of_force_cnt;
+    stateData.race_use_of_force = +stateData.race_use_of_force;
+    stateData.race_neighborhood = +stateData.race_neighborhood;
+    stateData.median_income = +stateData.median_income;
   });
 
   // xLinearScale function above csv import
@@ -255,33 +251,33 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
    .attr("y", d => yLinearScale(d[chosenYAxis]))
    .attr("dy", 3)
    .attr("font-size", "10px")
-   .text(function(d) {return d.abbr});
+   .text(function(d) {return d.neighborhood_id});
 
   // Create group for 3 x-axis labels
   let labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
 
-  let povertyLabel = labelsGroup.append("text")
+  let subjectRaceLabel = labelsGroup.append("text")
     .classed("aText", true)
     .attr("x", 0)
     .attr("y", 20)
-    .attr("value", "poverty") // value to grab for event listener
+    .attr("value", "race_use_of_force") // value to grab for event listener
     .classed("active", true)
-    .text("In Poverty (%)");
+    .text("Subject Race (%)");
 
-  let ageLabel = labelsGroup.append("text")
+  let demoLabel = labelsGroup.append("text")
     .classed("aText", true)
     .attr("x", 0)
     .attr("y", 40)
-    .attr("value", "age") // value to grab for event listener
+    .attr("value", "race_neighborhood") // value to grab for event listener
     .classed("inactive", true)
-    .text("Age Median");
+    .text("Neighborhood Demographics");
 
    let incomeLabel = labelsGroup.append("text")
    .classed("aText", true)
     .attr("x", 0)
     .attr("y", 60)
-    .attr("value", "income") // value to grab for event listener
+    .attr("value", "median_income") // value to grab for event listener
     .classed("inactive", true)
     .text("Household Income Median");
    
@@ -291,36 +287,28 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
 
   // append y axis
 
-  let obesityLabel = yLabelsGroup.append("text")
+  let incidentLabel = yLabelsGroup.append("text")
         .classed("aText", true)
         .classed("active", true)
         .attr("x", 0)
         .attr("y", 0 - 60)
         .attr("dy", "1em")
         .attr("transform", "rotate(-90)")
-        .attr("value", "obesity")
-        .text("Obese (%)");
+        .attr("value", "cases_count")
+        .text("Police Incidents");
         
-  let healthcareLabel = yLabelsGroup.append("text")
-        .classed("aText", true)
-        .classed("inactive", true)
-        .attr("x", 0)
-        .attr("y", 0 - 20)
-        .attr("dy", "1em")
-        .attr("transform", "rotate(-90)")
-        .attr("value", "healthcare")
-        .text("Lacks Healthcare (%)");
-
-  let smokesLabel = yLabelsGroup.append("text")
+  let forceLabel = yLabelsGroup.append("text")
         .classed("aText", true)
         .classed("inactive", true)
         .attr("x", 0)
         .attr("y", 0 - 40)
         .attr("dy", "1em")
         .attr("transform", "rotate(-90)")
-        .attr("value", "smokes")
-        .text("Smokes (%)");
+        .attr("value", "police_use_of_force_cnt")
+        .text("Use of Force Cases");
+        
 
+  
   // updateToolTip function above csv import
    circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
@@ -351,36 +339,36 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
         // changes classes to change bold text
-        if (chosenXAxis === "poverty") {
-          povertyLabel
+        if (chosenXAxis === "race_use_of_force") {
+          subjectRaceLabel
             .classed("active", true)
             .classed("inactive", false);
-          ageLabel
+          demoLabel
             .classed("active", false)
             .classed("inactive", true);
           incomeLabel
             .classed("active", false)
             .classed("inactive", true);
         }
-        else if (chosenXAxis === "age") {
-          ageLabel
+        else if (chosenXAxis === "race_neighborhood") {
+          demoLabel
             .classed("active", true)
             .classed("inactive", false);
-          povertyLabel
+          subjectRaceLabel
             .classed("active", false)
             .classed("inactive", true);
           incomeLabel
             .classed("active", false)
             .classed("inactive", true);
         }
-        else if (chosenXAxis === "income"){
+        else if (chosenXAxis === "median_income"){
         incomeLabel  
           .classed("active", true)
           .classed("inactive", false);
-        povertyLabel
+        subjectRaceLabel
           .classed("active", false)
           .classed("inactive", true);
-        ageLabel
+        demoLabel
           .classed("active", false)
           .classed("inactive", true);
         }
@@ -415,36 +403,20 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
         // changes classes to change bold text
-        if (chosenYAxis === "healthcare") {
-          healthcareLabel
+        if (chosenYAxis === "police_use_of_force_cnt") {
+          forceLabel
             .classed("active", true)
             .classed("inactive", false);
-          smokesLabel
-            .classed("active", false)
-            .classed("inactive", true);
-          obesityLabel
+          incidentLabel
             .classed("active", false)
             .classed("inactive", true);
         }
-        else if (chosenYAxis === "smokes") {
-          smokesLabel
-            .classed("active", true)
-            .classed("inactive", false);
-          healthcareLabel
-            .classed("active", false)
-            .classed("inactive", true);
-          obesityLabel
-            .classed("active", false)
-            .classed("inactive", true);
-        }
-        else if (chosenYAxis === "obesity"){
-        obesityLabel  
+        
+        else if (chosenYAxis === "cases_count"){
+        incidentLabel  
           .classed("active", true)
           .classed("inactive", false);
-        healthcareLabel
-          .classed("active", false)
-          .classed("inactive", true);
-        smokesLabel
+        forceLabel
           .classed("active", false)
           .classed("inactive", true);
         }
