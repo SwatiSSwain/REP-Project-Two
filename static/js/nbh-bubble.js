@@ -154,7 +154,7 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
 
 function renderLegend(legend) {  
 
-  legend.exit().remove();
+  //legend.exit().remove();
 
   legend = svg.remove()
       .selectAll(".legend")
