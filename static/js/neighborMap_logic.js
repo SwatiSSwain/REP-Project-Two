@@ -9,7 +9,6 @@ d3.json(minNbrhoods, function (data) {
   createFeatures(data.features)
 });
 
-
 // Creates colors for the map based on the neighborhood id
 function getColor(id) {
   return id > 80 ? '#800026' :
