@@ -11,7 +11,7 @@ d3.json(minNbrhoods, function (data) {
 });
 
 // Creates colors for the map based on the neighborhood id
-function getColor(id) {
+function neighborhoodColor(id) {
   return id > 80 ? '#800026' :
          id > 70 ? '#BD0026' :
          id > 60 ? '#E31A1C' :
@@ -26,7 +26,7 @@ function getColor(id) {
 // Sets the style of the neighborhood
 function style(feature) {
   return {
-    fillColor: getColor(feature.properties.FID),
+    fillColor: neighborhoodColor(feature.properties.FID),
     weight: 2,
     opacity: 1,
     color: 'black',
@@ -40,24 +40,34 @@ function style(feature) {
 
 function incidentColor(severity, resistance) {
   if (severity == 2 && resistance == 4) {
-    return "red";
+    return "#F4511E";
   } else if (severity = 2 && resistance == 3) {
-    return "orange";
+    return "#FB8C00";
   } else if (severity = 2 && resistance == 2) {
-    return "yellow";
+    return "#FDD835";
   } else if (severity = 2 && resistance == 1) {
-    return "green";
+    return "#C0CA33";
   } else if (severity = 1 && resistance == 4) {
-    return "purple";
+    return "#00897B";
   } else if (severity = 1 && resistance == 3) {
-    return "indigo";
+    return "#039BE5";
   } else if (severity = 1 && resistance == 2) {
-    return "pink";
+    return "#9C27B0";
   } else {
-    return "blue";
+    return "#F06292";
   };
+};
 
-  };
+function legendColor(grade) {
+  return grade > 7 ? "#F4511E" :
+         grade > 6 ? "#FB8C00" :
+         grade > 5 ? "#FDD835" :
+         grade > 4 ? "#C0CA33" :
+         grade > 3 ? "#00897B" :
+         grade > 2 ? "#039BE5" :
+         grade > 1 ? "#9C27B0" :
+                     "#F06292" ;
+}
 
 function createFeatures(neighborhoods) {
   // Create a GeoJSON layer for the neighborhood boundaries
@@ -126,7 +136,7 @@ function createMap(neighborhoods) {
 
   // Creating map object
   let myMap = L.map("map-neighborhood", {
-    center: [useOfForceData[0].lat, useOfForceData[0].long],
+    center: [useOfForceData[0].lat, (useOfForceData[0].long - (-0.015))],
     zoom: 13.5,
     layers: [darkmap, neighborhoods, incidents]
   });
@@ -138,14 +148,16 @@ function createMap(neighborhoods) {
 
     // Code from StackExchange to build up the legend
     var div = L.DomUtil.create('div', 'info legend'),
-    grades = [1, 2, 3, 4, 5, 6, 7, 8],
-    labels = [];
+    grades = [0, 1, 2, 3, 4, 5, 6, 7],
+    labels = ["Not Severe / Not Severe", "Not Severe / More Severe", "Not Severe / Least Severe", 
+    "Not Severe / Severe", "Severe / Severe", "Severe /More Severe", "Severe /Least Severe", "Severe / Not Sever"];
+    div.innerHTML += `<h8><b><center> Severity of <br>Police Response / Subject Resistance</b></h8><br>`
 
     // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-      div.innerHTML +=
-          '<i style="background:' + incidentColor(grades[i] + 1) + '"></i> ' +
-          grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    for (var i = 0; i < 8; i++) {
+      div.innerHTML += 
+          '<i style="background:' + legendColor(grades[i] + 1) + '"></i>' + 
+          (labels[i]) + '<br>';
     };
 
     return div;
