@@ -1,17 +1,14 @@
 // Paths to the geoJSON files
 let minNbrhoods = "../static/data/Minneapolis_Neighborhoods.geojson";
+
 // Path to data
 let useOfForceData = neighborhood_use_of_force;
-
-// for (var i = 0; i < 4; i++) {
-//   console.log(useOfForceData[i].response_date);
-//   console.log(Date.parse(useOfForceData[i].response_date));
-// }
 
 // Call the neighborhood data
 d3.json(minNbrhoods, function (data) {
   createFeatures(data.features)
 });
+
 
 // Creates colors for the map based on the neighborhood id
 function getColor(id) {
@@ -36,6 +33,10 @@ function style(feature) {
     fillOpacity: 0.2
   };
 };
+
+/* severity: 2 most, 1 least
+   type of resistance: 4 most, 1 least
+*/
 
 function incidentColor(severity) {
   if (severity != 2) {
@@ -78,11 +79,8 @@ function createMap(neighborhoods) {
     accessToken: API_KEY
   });
 
-  console.log(useOfForceData);
-
   let incidentMarker = [];
-  let timelineLayer = [];
-
+  
   // Loop through data
   useOfForceData.forEach(function (incident) {
     // create the markers
@@ -96,23 +94,9 @@ function createMap(neighborhoods) {
     .bindPopup(`<h3> Force Type: ${incident.police_use_of_force_type}`)
 
     incidentMarker.push(marker);
-
-    let timeline = L.timeline(useOfForceData, {
-      getInterval: function(feature) {
-        return {
-          start: feature.properties.time,
-          end: feature.properties.time + feature.properties.mag * 10000000
-        };
-      },
-      pointToLayer: onEachQuakeLayer,
-      onEachFeature: onEachEarthquake
-    });
-
   });
 
   let incidents = L.layerGroup(incidentMarker);
-
-
   
   // Define a baseMaps object to hold base layers
   let baseMaps = {
@@ -140,30 +124,4 @@ function createMap(neighborhoods) {
     collapsed: false
   }).addTo(myMap);
 
-  // Adds timeline and timeline controls
-  let timelineControl = L.timelineSliderControl({
-    formatOutput: function(date) {
-      return new Date(date).toString();
-    }
-  });
-  timelineControl.addTo(map);
-  timelineControl.addTimelines(timelineLayer);
-  timelineLayer.addTo(map);
-
 };
-
-
-/*
-	1.) Geo Map: 
-			Default at the Neighborhood (You have to select a Neighborhood to populate data (defaults to blank))
-			Metric: 
-				Police Incidents
-				Dynamic parameter metric to swap to view Use of Force
-			Attributes:
-				Size: # of Incidents
-				Color: Severity
-            Filter: Crime Type, Income, Time, Race, Neighborhood, Precinct, Community, Year
-
-    - Select neighborhood from dropdown menu
-    - Populate the neighborhood with color coded markers based on severity of use of force
-*/
