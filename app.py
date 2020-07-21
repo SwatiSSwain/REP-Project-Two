@@ -98,15 +98,21 @@ def mpls_deepdive():
                 demo_of_color_pct, median_income, income_group FROM top_10_neighborhood ORDER BY cast(replace(total_cases,',','') as int) DESC LIMIT 5;")
     use_force= cur.fetchall()
 
+    #Column names for 2nd table in index page
+    columns_data2 = ['Categories', 'Correlation', 'Result']
+
+    #Query 1st table in index page
+    cur.execute("SELECT descr,round(correlation,4) as correlation, result  FROM corelation;")
+    corelation= cur.fetchall()
     
 
-    return render_template("mpls_deepdive.html", neighborhood=neighborhood, use_force=use_force,columns_data1=columns_data1)
+    return render_template("mpls_deepdive.html", neighborhood=neighborhood, use_force=use_force,columns_data1=columns_data1, corelation=corelation, columns_data2=columns_data2)
 
 @app.route("/inference")
 def inference():
 
     #Column names for 2nd table in index page
-    columns_data2 = ['Subject Race', 'p-value (vs White pop)', 'Avg Police Force Incidents']
+    columns_data2 = ['Subject Race', 'p-value (vs White pop)', 'Avg Police Force Incidents by Neighborhood']
 
     #Query 2nd table in index page
     cur.execute("select description, substring(p_value,1,7) as p_value ,substring(police_force_incidents,1,6) as police_force_incidents from ttest;")

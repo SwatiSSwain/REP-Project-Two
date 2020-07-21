@@ -61,6 +61,40 @@
             <h5>Correlations Discovered Between Police Use of Force and Subject Race, Neighborhood Demographics, Household Income</h5>
            
           <div id="scatter"></div>
+            <hr>
+            <br><h5 class="font-weight-bold">Correlation Data</h5>
+           
+            <!-- table div -->
+          <div id="table-correlation">
+            <!--2nd table summarizing top 5 neighborhoods with most Use of Force (Year >= 2012)-->
+            <div class="table-responsive col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              
+             <table class="table table-striped">
+               
+               <thead class="thead-dark">
+                 <tr style="text-align: left;">
+                {% for column in columns_data2 %}
+                   <th>{{ column }}</th>
+                {% endfor %}
+               </thead>
+             </tr>
+               
+               <tbody>
+                 {% for item in corelation %}
+                 <TR>
+                    
+                    <TD >{{item[0]}}</TD>
+                    <TD >{{item[1]}}</TD>
+                    <TD >{{item[2]}}</TD>
+                 </TR>
+                 {% endfor %}
+               </tbody>
+               </table>
+         
+             </div>
+
+         </div>
+
           </div>
         </div>
           
@@ -69,8 +103,7 @@
         <div class="row">
           <div class="col-md-12">
             <br><h5 class="font-weight-bold">Top 5 neighborhoods with most Use of Force (Year >= 2012)</h5>
-            
-            <!-- table div -->
+          <!-- table div -->
           <div id="table-neighborhood">
              <!--2nd table summarizing top 5 neighborhoods with most Use of Force (Year >= 2012)-->
              <div class="table-responsive col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -106,6 +139,8 @@
               </div>
 
           </div>
+
+
           </div>
         </div>
 
