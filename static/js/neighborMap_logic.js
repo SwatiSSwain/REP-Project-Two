@@ -4,7 +4,6 @@ let minNbrhoods = "../static/data/Minneapolis_Neighborhoods.geojson";
 // Path to data
 let useOfForceData = neighborhood_use_of_force;
 
-console.log(useOfForceData);
 // Call the neighborhood data
 d3.json(minNbrhoods, function (data) {
   createFeatures(data.features)
@@ -49,20 +48,23 @@ function incidentColor(severity, resistance) {
     return "#039BE5";
   } else if (severity = 1 && resistance == 3) {
     return "#9C27B0";
-  } else {
+  } else if (severity = 1 && resistance == 4) {
     return "#F06292";
+  }else {
+    return "#ABB2B9";
   };
 };
 
 function legendColor(grade) {
-  return grade > 7 ? "#F4511E" :
-         grade > 6 ? "#FB8C00" :
-         grade > 5 ? "#FDD835" :
-         grade > 4 ? "#C0CA33" :
-         grade > 3 ? "#00897B" :
-         grade > 2 ? "#039BE5" :
-         grade > 1 ? "#9C27B0" :
-                     "#F06292" ;
+  return grade > 8 ? "#F4511E" :
+         grade > 7 ? "#FB8C00" :
+         grade > 6 ? "#FDD835" :
+         grade > 5 ? "#C0CA33" :
+         grade > 4 ? "#00897B" :
+         grade > 3 ? "#039BE5" :
+         grade > 2 ? "#9C27B0" :
+         grade > 1 ? "#F06292" :
+                     "#ABB2B9"
 }
 
 function createFeatures(neighborhoods) {
@@ -111,7 +113,7 @@ function createMap(neighborhoods) {
       fillOpacity: 1,
       radius: 5
     })
-    .bindPopup(`<h6><b> Police Use of Force Type: </b> ${incident.police_use_of_force_type} </h6>
+    .bindPopup(`${incident.police_use_of_force_id}<h6><b> Police Use of Force Type: </b> ${incident.police_use_of_force_type} </h6>
     <h6><b> Police Use of Force Action: </b> ${incident.force_type_action} </h6><hr>
     <h6><b> Subject Type of Resistance: </b> ${incident.type_of_resistance} </h6>
     <h6><b> Subject Race: </b> ${incident.subject_race} </h6>
@@ -148,13 +150,14 @@ function createMap(neighborhoods) {
 
     // Code from StackExchange to build up the legend
     var div = L.DomUtil.create('div', 'info legend'),
-    grades = [0, 1, 2, 3, 4, 5, 6, 7],
-    labels = ["Not Severe / Not Severe", "Not Severe / More Severe", "Not Severe / Least Severe", 
-    "Not Severe / Severe", "Severe / Severe", "Severe /More Severe", "Severe /Least Severe", "Severe / Not Sever"];
+    grades = [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    labels = ["Resistance Unspecified/Other", "Not Severe / Not Severe", "Not Severe / More Severe", 
+    "Not Severe / Least Severe", "Not Severe / Severe", "Severe / Severe", "Severe /More Severe", 
+    "Severe /Least Severe", "Severe / Not Sever"];
     div.innerHTML += `<h8><b><center> Severity of <br>Police Response / Subject Resistance</b></h8><br>`
 
     // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < 8; i++) {
+    for (var i = 0; i < grades.length; i++) {
       div.innerHTML += 
           '<i style="background:' + legendColor(grades[i] + 1) + '"></i>' + 
           (labels[i]) + '<br>';
