@@ -4,6 +4,7 @@ let minNbrhoods = "../static/data/Minneapolis_Neighborhoods.geojson";
 // Path to data
 let useOfForceData = neighborhood_use_of_force;
 
+console.log(useOfForceData);
 // Call the neighborhood data
 d3.json(minNbrhoods, function (data) {
   createFeatures(data.features)
@@ -37,12 +38,26 @@ function style(feature) {
    type of resistance: 4 most, 1 least
 */
 
-function incidentColor(severity) {
-  if (severity != 2) {
-    return "blue"; 
-  } else
+function incidentColor(severity, resistance) {
+  if (severity == 2 && resistance == 4) {
     return "red";
-};
+  } else if (severity = 2 && resistance == 3) {
+    return "orange";
+  } else if (severity = 2 && resistance == 2) {
+    return "yellow";
+  } else if (severity = 2 && resistance == 1) {
+    return "green";
+  } else if (severity = 1 && resistance == 4) {
+    return "purple";
+  } else if (severity = 1 && resistance == 3) {
+    return "indigo";
+  } else if (severity = 1 && resistance == 2) {
+    return "pink";
+  } else {
+    return "blue";
+  };
+
+  };
 
 function createFeatures(neighborhoods) {
   // Create a GeoJSON layer for the neighborhood boundaries
@@ -85,7 +100,7 @@ function createMap(neighborhoods) {
     // create the markers
     let marker = L.circleMarker([incident.lat, incident.long], {
       color: "white",
-      fillColor: incidentColor(incident.severity_of_force),
+      fillColor: incidentColor(incident.severity_of_force, incident.severity_of_resistance),
       weight: 1,
       fillOpacity: 1,
       radius: 5
@@ -115,6 +130,28 @@ function createMap(neighborhoods) {
     zoom: 13.5,
     layers: [darkmap, neighborhoods, incidents]
   });
+
+  // Set the legend
+  let legend = L.control({position: 'bottomright'});
+
+  legend.onAdd = function (map) {
+
+    // Code from StackExchange to build up the legend
+    var div = L.DomUtil.create('div', 'info legend'),
+    grades = [1, 2, 3, 4, 5, 6, 7, 8],
+    labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML +=
+          '<i style="background:' + incidentColor(grades[i] + 1) + '"></i> ' +
+          grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    };
+
+    return div;
+  };
+  
+  legend.addTo(myMap);
  
   // Create layer control
   // Pass in our baseMaps and overlayMaps
