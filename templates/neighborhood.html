@@ -107,7 +107,41 @@
             <div class="row">
               <div class="col-md-12">
                 <!-- table div -->
-              <div id="table-neighborhood"></div>
+              <div id="table-neighborhood">
+
+                <!--Table summarizing selected MLS neighborhood crime & demographics stats-->
+          <div class="table-responsive col-lg-12 col-md-12 col-sm-12 col-xs-12">
+           
+            <table class="table table-striped">
+              
+              <thead class="thead-light">
+                <tr style="text-align: left;">
+               {% for column in columns %}
+                  <th>{{ column }}</th>
+               {% endfor %}
+              </thead>
+            </tr>
+              
+              <tbody>
+                {% for item in neighborhood_data %}
+                <TR>
+                   
+                   <TD >{{item[0]}}</TD>
+                   <TD >{{item[1]}}</TD>
+                   <TD >{{item[2]}}</TD>
+                   <TD >{{item[3]}}</TD>
+                   <TD >{{item[4]}}</TD>
+                   <TD >{{item[5]}}</TD>
+                   <TD >{{item[6]}}</TD>
+                   <TD >{{item[7]}}</TD>
+                   <TD >{{item[8]}}</TD>
+                </TR>
+                {% endfor %}
+              </tbody>
+              </table>
+        
+            </div>
+              </div>
               </div>
             </div>
               
@@ -136,38 +170,17 @@
     integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
     crossorigin=""></script>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"
-  integrity="sha512-tAGcCfR4Sc5ZP5ZoVz0quoZDYX5aCtEm/eu1KhSLj2c9eFrylXZknQYmxUssFaVJKvvc0dJQixhGjG2yXWiV9Q=="
-  crossorigin=""></script>
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
-=======
-<<<<<<< HEAD
-    <!-- API key -->
-    <script type="text/javascript" src="../static/js/config.js"></script>
-=======
+
   <script src="https://d3js.org/d3.v5.min.js"></script>
->>>>>>> fdd76e74c856b0ed649c293808feb090f85b3d8b
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
->>>>>>> d3a1c3fc043c23f469b257cb539bc11c44d3a5b5
-=======
+
+
     <!-- API key -->
     <script type="text/javascript" src="../static/js/config.js"></script>
->>>>>>> a62cace2a3eb5bc7e5a2cb8e0b897bc3de567c59
 
-<<<<<<< HEAD
-<!-- <script src="../static/js/neighborhood-force.js"></script> -->
- 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
-  <script src="../static/js/neighborMap_logic.js"></script>
-=======
   <!-- <script src="../static/js/neighborhood-force.js"></script> -->
     <script src="../static/js/neighborMap_logic.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -175,7 +188,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
->>>>>>> fdd76e74c856b0ed649c293808feb090f85b3d8b
 
 
 

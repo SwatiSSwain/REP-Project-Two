@@ -89,20 +89,34 @@ def mpls_deepdive():
         newNeighborhood = request.form['neighborhood']
         return redirect("/" + newNeighborhood)
     
-    return render_template("mpls_deepdive.html", neighborhood=neighborhood)
+    #Column names for 2nd table in index page
+    columns_data1 = ['Neighborhood', 'Use of Force Cases', '% White - Use of Force', '% Of Color - Use of Force','% Race Unknown - Use of Force', '% White (Demographics)'
+                ,'% Of Color (Demographics)', 'Median Household Income','Income Group']
+
+    #Query 1st table in index page
+    cur.execute("SELECT neighborhood, total_cases, pct_white, pct_of_color, 100-(pct_white+pct_of_color) AS pct_race_unknown , demo_white_pct,\
+                demo_of_color_pct, median_income, income_group FROM top_10_neighborhood ORDER BY cast(replace(total_cases,',','') as int) DESC LIMIT 5;")
+    use_force= cur.fetchall()
+
+    
+
+    return render_template("mpls_deepdive.html", neighborhood=neighborhood, use_force=use_force,columns_data1=columns_data1)
 
 @app.route("/inference")
 def inference():
+
+    #Column names for 2nd table in index page
+    columns_data2 = ['Subject Race', 'p-value (vs White pop)', 'Avg Police Force Incidents']
+
+    #Query 2nd table in index page
+    cur.execute("select description, substring(p_value,1,7) as p_value ,substring(police_force_incidents,1,6) as police_force_incidents from ttest;")
+    ttest= cur.fetchall()
     
-    return render_template("Inference.html")
+    return render_template("Inference.html",ttest=ttest, columns_data2=columns_data2 )
 
 # Add a new route to display stats for dynamically seleted neighborhood
 @app.route("/<neighborhood>")
 def neighborhood_data(neighborhood):
-
-    #Column names for table in neighborhood page
-    #columns_data = ['Year', 'Police Incidents Count', 'Use of Force Cases', '% White Use of Force', '% Of Color Use of Force', '% White (Demographics)'
-               # ,'% Of Color (Demographics)', 'Median Household Income','Income Group']
 
     #Query table in neighborhood page
     cur.execute("select * from police_use_of_force WHERE neighborhood =  %s;", ((neighborhood),))
@@ -121,9 +135,18 @@ def neighborhood_data(neighborhood):
     columns_m = [col[0] for col in cur.description]
     demographics_dict = [dict(zip(columns_m, row)) for row in cur.fetchall()]
     demographics = json.dumps(demographics_dict,default=str)
+
+    #Column names for table in neighborhood page
+    columns_data = ['Year', 'Police Incidents Count', 'Use of Force Cases', '% White Use of Force', '% Of Color Use of Force', '% White (Demographics)'
+                ,'% Of Color (Demographics)', 'Median Household Income','Income Group']
+
+    #Query table in neighborhood page
+    cur.execute("SELECT incident_year,cases_count,police_use_of_force_cnt,pct_white_use_of_force,pct_of_color_use_of_force,white_pct,of_color_pct,median_income,\
+                income_group FROM mls_neighborhood_stats WHERE neighborhood_name =  %s order by incident_year;", ((neighborhood),))
+    nhbd = cur.fetchall()
    
  
-    return render_template("neighborhood.html", neighborhood_use_of_force=neighborhood_use_of_force,  nbr=neighborhood, income=income, demographics=demographics ) 
+    return render_template("neighborhood.html", neighborhood_use_of_force=neighborhood_use_of_force,  nbr=neighborhood, income=income, demographics=demographics,columns_data=columns_data, nhbd=nhbd ) 
 
 
 if __name__ == "__main__":

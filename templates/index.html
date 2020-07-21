@@ -45,20 +45,55 @@
       <!--First Column in this Row-->
       <div class="col-md-9 mb-3">
         <div class="box div-box">       
-        <h4 class="text-info font-weight-bold">Analysis of Police Use of Force in Minneapolis</h4>
+        <h4 class="text-info font-weight-bold">A Deep Dive of Police Use of Force in Minneapolis</h4>
         <hr class="my-4">        
           <div>
             <iframe width='100%' height='520' frameborder='0' src='https://samswey.carto.com/viz/e1005588-93d2-47b6-9a61-f4c0ed001163/embed_map' allowfullscreen webkitallowfullscreen mozallowfullscreen oallowfullscreen msallowfullscreen></iframe>
             
             <!--p><img src="Resources\assets\visualizations\1-City_Lat-v-Max_Temp.png" 
             style="margin: 0px 3%" class="one img-thumbnail rounded float-left img-fluid"></p-->      
+            <br>
+            <h5 class="text-info font-weight-bold">Background:</h5>
             <p class="card-text text-justify" style="padding-left: 2%;">
               For 8 minutes and 46 seconds, Derek Chauvin pressed his knee into the neck of George Floyd, an 
               use of force by the now-former Minneapolis police officer has reinvigorated a very public debate 
               about police brutality and racism.</p>
             
-            <p class="card-text text-justify" style="padding-left: 2%;">In this project, we are analysisng crime rates in Minneapolis neighborhoods,
-            use of force and how it is impacted by race and household income of a neighborhood.</p>
+            <p class="card-text text-justify" style="padding-left: 2%;">
+            The very systems that were built to improve the systems of the past remain oppressive in many ways. The police force 
+            and real estate have roots in systems of oppression, towards people of color in particular. Systems and policies 
+            such as redlining in neighborhoods meant to keep people of color (POC) out of wealthy communities, the 
+            Reagan administration’s war on drugs and leverage of police to target POC communities are only two examples. 
+            Living in Minneapolis through the murder of George Floyd was an experience that lead to many things, 
+            one being interest in understanding Minneapolis systems of oppression. In this website, we analyze Minneapolis, 
+            its neighborhoods, its demographics and what the relationship is to use of police force we can garner.</p>
+
+            <h5 class="text-info font-weight-bold">Project Objective:</h5>
+            <p class="card-text text-justify" style="padding-left: 2%;">To facilitate an analysis of the relationship 
+              between police incidents, the use of force by police in those incidents, and the demographic characteristics 
+              of the neighborhood in which the incidents occurred such as race and income.</p>
+            
+              <h5 class="text-info font-weight-bold">Data Sources:</h5>
+              <p class="card-text text-justify" style="padding-left: 2%;">
+            1. Police incident data by neighborhood - Minneapolis Open Data<br>
+            2. Police “use of force” data by neighborhood - Minneapolis Open Data<br>
+            3. Household Income levels by neighborhood - Web Scraping from MN Atlas<br>
+            4. Race distribution by neighborhood - Web Scraping from MN Atlas<br>
+            5. Geojsons for Minneapolis neighborhoods and police use of force <br>
+          </p>
+            
+          <h5 class="text-info font-weight-bold">  Coding Approach:</h5>
+              <p class="card-text text-justify" style="padding-left: 2%;">
+          
+            1. ETL - Extracted, transformed and loaded data to Postgres via Pandas<br>
+            2. Built as Flask app to pull data from database and render it to the website<br>
+            3. Analysis of data in Python to find corelations between different datasets<br>
+            4. Visualization - Used a combination rest API, HTML/CSS, Javascript(D3.js, Leaflet, Plotly), 
+            dynamic page rendering from Postgres<br>
+            5. Deployment - Heroku was used to deploy the website
+            </p>
+
+
           </div> 
         
         <!--End of first box-->
@@ -73,7 +108,7 @@
      <!--Create a dropdown menu for user to select a neighborhood & return form input to the app-->
      <div class="col-md-3">
         <div class="box div-box">  
-        <h5 class="text-info font-weight-bold text-center"><i class='fas fa-chart-line' style='color:#00acc1'></i> Use of Force in your Neighborhood</h5>
+        <h5 class="text-info font-weight-bold text-center"><i class='fas fa-chart-line' style='color:#00acc1'></i> Learn more about your Neighborhood</h5>
         <hr class="my-4">    
           <div class="row" class="mx-auto" >
            
