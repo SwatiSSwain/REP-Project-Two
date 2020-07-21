@@ -74,7 +74,7 @@ function createFeatures(neighborhoods, policePrecints, communities) {
 };
 
 // Build the map
-function createMap(neighborhoods, policePrecints, communities, timeline) {
+function createMap(neighborhoods, policePrecints, communities) {
   // Adding tile layer
   let streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -114,14 +114,18 @@ function createMap(neighborhoods, policePrecints, communities, timeline) {
 
   // Create the markers for Police incidents
   d3.json(forceData, function (forcedata) {
+    console.log(forcedata);
     // Create a markers cluster group
     let markers = L.markerClusterGroup();
     
     forcedata.forEach(function (incident) {
       markers.addLayer(L.marker([parseFloat(incident.lat), parseFloat(incident.long)])
-        .bindPopup(`<h3> Date of Incident: ${incident.response_date} </h3>
-        <h3> Use of Force Type:? ${incident.police_use_of_force_type} </h3>
-        <hr> <h3> Subject Race: ${incident.subject_race} </h3>`));
+        .bindPopup(`<h6><b> Date of Incident:</b> ${new Date (Date.parse(incident.response_date))} </h6>
+        <h6><b> Police Use of Force Type: </b> ${incident.police_use_of_force_type} </h6>
+        <h6><b> Police Use of Force Action: </b> ${incident.force_type_action} </h6>
+        <hr> <h6><b> Subject Type of Resistance: </b> ${incident.type_of_resistance} </h6>
+        <h6><b> Subject Race: </b> ${incident.subject_race} </h6>
+        <h6><b> Subject Sex: </b> ${incident.subject_sex} </h6>`));
     })
     // Add our marker cluster layer to the map
     myMap.addLayer(markers);
