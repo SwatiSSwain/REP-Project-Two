@@ -114,7 +114,6 @@ function createMap(neighborhoods, policePrecints, communities) {
 
   // Create the markers for Police incidents
   d3.json(forceData, function (forcedata) {
-    console.log(forcedata);
     // Create a markers cluster group
     let markers = L.markerClusterGroup();
     
