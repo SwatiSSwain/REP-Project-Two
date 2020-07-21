@@ -150,7 +150,7 @@ def neighborhood_data(neighborhood):
 
     #Column names for table in neighborhood page
     columns_data = ['Year', 'Police Incidents Count', 'Use of Force Cases', '% White Use of Force', '% Of Color Use of Force', '% White (Demographics)'
-                ,'% Of Color (Demographics)', 'Median Household Income','Income Group']
+                ,'% Of Color (Demographics)', 'Median Household Income ($)','Income Group']
 
     #Query table in neighborhood page
     cur.execute("SELECT incident_year,cases_count,police_use_of_force_cnt,pct_white_use_of_force,pct_of_color_use_of_force,white_pct,of_color_pct,median_income,\

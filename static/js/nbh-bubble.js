@@ -40,6 +40,7 @@ function responsivefy(svg) {
       svg.attr('height', Math.round(w / aspect));
   }
 };
+
   
 // svg params
 let svgWidth = 960;
@@ -150,13 +151,13 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
   return circlesGroup;
 }
 
-function renderLegend(legend) {
-  
-  legend="";
 
-  console.log(legend)
+function renderLegend(legend) {  
 
-  legend = svg.selectAll(".legend")
+  legend.exit().remove();
+
+  legend = svg.remove()
+      .selectAll(".legend")
       .data(color.domain())
       .enter().append("g")
       .attr("class", "legend")
@@ -511,3 +512,8 @@ legend = renderLegend(legend);
   }).catch(function(error) {
     console.log(error);
 });
+
+
+
+// When the browser loads, makeResponsive() is called.
+//makeResponsive();
