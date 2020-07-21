@@ -21,6 +21,7 @@
     <!-- <script src="https://d3js.org/d3.v5.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
 
+    
   </head>
 
   <body>
@@ -60,7 +61,10 @@
                     <a class="nav-link" href="/mpls_deepdive">MPLS Deep Dive</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="Inference.html">Inference</a>
+                  <a class="nav-link" href="/cluster">Use of Force Cluster</a>
+              </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/inference">Inference</a>
                 </li>
           </ul>
         </div>
@@ -74,7 +78,7 @@
         <!--First Column in this Row-->
         <div class="col-md-12">
           <div class="box div-box">       
-          <h4 class="text-info font-weight-bold">Analysis of Police Use of Force in {{nbr}}</h4>
+          <h4 class="text-info font-weight-bold">Police Use of Force in {{nbr}}</h4>
           <hr class="my-4"> 
           
             <div class="row">
@@ -100,7 +104,12 @@
                 <div id="map-neighborhood"></div>
               </div>
             </div>
-
+            
+            <hr class="my-4"> 
+            <div class="col-md-12">
+              <div class="box div-box">       
+              <h5 class="font-weight-bold">Crime Rates and Demographics Stats</h5>
+               
             <div class="row">
               <div class="col-md-12">
                 <!-- table div -->
@@ -111,16 +120,16 @@
            
             <table class="table table-striped">
               
-              <thead class="thead-light">
+              <thead class="thead-dark">
                 <tr style="text-align: left;">
-               {% for column in columns %}
+               {% for column in columns_data %}
                   <th>{{ column }}</th>
                {% endfor %}
               </thead>
             </tr>
               
               <tbody>
-                {% for item in neighborhood_data %}
+                {% for item in nhbd %}
                 <TR>
                    
                    <TD >{{item[0]}}</TD>
@@ -150,7 +159,13 @@
 
       <!--End of row-->
       </div>
-    
+
+      </div>
+      
+      
+       
+  </div>
+
     <!--End of container-->
     </div>
 
@@ -179,6 +194,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+
+ 
   
   </body>
   

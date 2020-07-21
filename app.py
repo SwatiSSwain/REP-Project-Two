@@ -114,10 +114,22 @@ def inference():
     
     return render_template("Inference.html",ttest=ttest, columns_data2=columns_data2 )
 
+@app.route("/cluster")
+def cluster():
+
+    #Column names for  table
+    columns_data3 = ['Race & Resistance Type', 'Cluster Severity - High', 'Cluster Severity - Medium', 'Cluster Severity - Low']
+
+    #Query 
+    cur.execute("select * from cluster_ndb order by cluster1_high DESC, cluster2_med DESC, cluster3_low DESC;")
+    cluster_nbd= cur.fetchall()
+    
+    return render_template("crime-cluster.html",cluster_nbd=cluster_nbd, columns_data3=columns_data3 )
+
 # Add a new route to display stats for dynamically seleted neighborhood
 @app.route("/<neighborhood>")
 def neighborhood_data(neighborhood):
-
+    
     #Query table in neighborhood page
     cur.execute("select * from police_use_of_force WHERE neighborhood =  %s;", ((neighborhood),))
     columns = [col[0] for col in cur.description]
@@ -146,7 +158,7 @@ def neighborhood_data(neighborhood):
     nhbd = cur.fetchall()
    
  
-    return render_template("neighborhood.html", neighborhood_use_of_force=neighborhood_use_of_force,  nbr=neighborhood, income=income, demographics=demographics,columns_data=columns_data, nhbd=nhbd ) 
+    return render_template("neighborhood.html",  neighborhood_use_of_force=neighborhood_use_of_force,  nbr=neighborhood, income=income, demographics=demographics,columns_data=columns_data, nhbd=nhbd ) 
 
 
 if __name__ == "__main__":

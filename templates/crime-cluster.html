@@ -42,60 +42,58 @@
   <!--End of Nav Bar-->
 
   <!--Adding cointainer for Data & Visualization-->
-  <div class="container-fluid  p-5"  >
+  <div class="container-fluid  p-5">
     <div class="row" class="mx-auto">
-
+    
       <!--First Column in this Row-->
       <div class="col-md-12">
-        <div class="box div-box">       
-        <h4 class="text-info font-weight-bold">Inferences from our Analysis</h4>
-        <hr class="my-4">        
-        <div class="row">
-          <div class="col-md-12">
-            <br><h5 class="font-weight-bold">T-test for average use of force and subject race</h5>
-             
-            <!-- table div -->
-          <div id="table-neighborhood">
-             <!--2nd table summarizing top 5 neighborhoods with most Use of Force (Year >= 2012)-->
-             <div class="table-responsive col-lg-12 col-md-12 col-sm-12 col-xs-12">
-               
-              <table class="table table-striped">
-                
-                <thead class="thead-dark">
-                  <tr style="text-align: left;">
-                 {% for column in columns_data2 %}
-                    <th>{{ column }}</th>
-                 {% endfor %}
-                </thead>
-              </tr>
-                
-                <tbody>
-                  {% for item in ttest %}
-                  <TR>
+        <div class="box div-box2">       
+        <h4 class="text-info font-weight-bold">Subject Race & Resistance Type Cluster</h4>
+        <hr class="my-4"> 
                      
-                     <TD >{{item[0]}}</TD>
-                     <TD >{{item[1]}}</TD>
-                     <TD >{{item[2]}}</TD>
-                  </TR>
-                  {% endfor %}
-                </tbody>
-                </table>
-          
-              </div>
+          <div><p class="card-text text-justify">The following table groups subject, race and resistance data into high, 
+            medium and low clusters based on frequency of the events.</p><br></div> 
+        
+          <!--div class="table-responsive-sm table-responsive-md table-responsive-lg table-responsive-xl"-->
+          <div class="table-responsive col-lg-12 col-md-12 col-sm-12 col-xs-12">
+           
+            <table class="table table-striped">
+              
+              <thead class="thead-dark">
+                <tr style="text-align: left;">
+                        
+                {% for column in columns_data3 %}
+                   <th>{{ column }}</th>
+                {% endfor %}
+               </thead>
+             </tr>
+               
+               <tbody>
+                 {% for item in cluster_nbd %}
+                 <TR>
+                    
+                    <TD >{{item[0]}}</TD>
+                    <TD >{{item[1]}}</TD>
+                    <TD >{{item[2]}}</TD>
+                    <TD >{{item[3]}}</TD>
+                 </TR>
+                 {% endfor %}
+               </tbody>
+               </table>
+         
+             </div>
 
-          </div>
-          </div>
-        </div>
-        <br>
-        <h5 class="text-info font-weight-bold">Conclusion:</h5>
+         </div>
+
+
         
         <!--End of first box-->
         </div>
 
       <!--End of first column-->
       </div> 
-
-    
+  
+    </div>
     <!--End of row-->
     </div>
   

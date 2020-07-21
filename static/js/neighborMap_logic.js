@@ -63,7 +63,7 @@ function createFeatures(neighborhoods) {
   // Create a GeoJSON layer for the neighborhood boundaries
   let minNeighborhoods = L.geoJSON(neighborhoods, {
   onEachFeature: function (feature, layer) {
-      layer.bindPopup(`<h3> ${feature.properties.BDNAME} </h3>`)
+      layer.bindPopup(`<h5> ${feature.properties.BDNAME} </h5>`)
   },
   pointToLayer: function (feature) {
       return L.polyline (feature.geometry.coordinates)
