@@ -313,7 +313,7 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
     .attr("r", 17)
-    .attr("opacity", ".9")
+    .attr("opacity", ".8")
     .style("fill", function(d) { return color(cValue(d));}) ;
 
    // append counts
@@ -331,7 +331,8 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
   // draw legend
   let legend = svg.selectAll(".legend")
       .data(color.domain())
-      .enter().append("g")
+      .enter()
+      .append("g")
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
