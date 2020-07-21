@@ -2,6 +2,7 @@
 let minNbrhoods = "../static/data/Minneapolis_Neighborhoods.geojson";
 let minPolPrec = "../static/data/Minneapolis_Police_Precincts.geojson";
 let minCommunities = "../static/data/Communities.geojson";
+
 // Path to data
 let forceData = '/api/geojson';
 
@@ -73,7 +74,7 @@ function createFeatures(neighborhoods, policePrecints, communities) {
 };
 
 // Build the map
-function createMap(neighborhoods, policePrecints, communities) {
+function createMap(neighborhoods, policePrecints, communities, timeline) {
   // Adding tile layer
   let streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -115,15 +116,15 @@ function createMap(neighborhoods, policePrecints, communities) {
   d3.json(forceData, function (forcedata) {
     // Create a markers cluster group
     let markers = L.markerClusterGroup();
-//severity_of_resistance
+    
     forcedata.forEach(function (incident) {
       markers.addLayer(L.marker([parseFloat(incident.lat), parseFloat(incident.long)])
         .bindPopup(`<h3> Date of Incident: ${incident.response_date} </h3>
         <h3> Use of Force Type:? ${incident.police_use_of_force_type} </h3>
         <hr> <h3> Subject Race: ${incident.subject_race} </h3>`));
     })
-  // Add our marker cluster layer to the map
-  myMap.addLayer(markers);
+    // Add our marker cluster layer to the map
+    myMap.addLayer(markers);
   });
 
   // Create layer control
@@ -131,6 +132,6 @@ function createMap(neighborhoods, policePrecints, communities) {
   // Add the layer control to the map
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
-}).addTo(myMap);
+  }).addTo(myMap);
 };
   

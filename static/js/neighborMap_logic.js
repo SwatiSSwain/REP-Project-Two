@@ -1,15 +1,10 @@
 // Paths to the geoJSON files
 let minNbrhoods = "../static/data/Minneapolis_Neighborhoods.geojson";
-console.log(minNbrhoods)
+
 // Path to data
 let useOfForceData = neighborhood_use_of_force;
-console.log(useOfForceData)
 
-// for (var i = 0; i < 4; i++) {
-//   console.log(useOfForceData[i].response_date);
-//   console.log(Date.parse(useOfForceData[i].response_date));
-// }
-
+console.log(useOfForceData);
 // Call the neighborhood data
 d3.json(minNbrhoods, function (data) {
   createFeatures(data.features)
@@ -39,12 +34,30 @@ function style(feature) {
   };
 };
 
-function incidentColor(severity) {
-  if (severity != 2) {
-    return "blue"; 
-  } else
+/* severity: 2 most, 1 least
+   type of resistance: 4 most, 1 least
+*/
+
+function incidentColor(severity, resistance) {
+  if (severity == 2 && resistance == 4) {
     return "red";
-};
+  } else if (severity = 2 && resistance == 3) {
+    return "orange";
+  } else if (severity = 2 && resistance == 2) {
+    return "yellow";
+  } else if (severity = 2 && resistance == 1) {
+    return "green";
+  } else if (severity = 1 && resistance == 4) {
+    return "purple";
+  } else if (severity = 1 && resistance == 3) {
+    return "indigo";
+  } else if (severity = 1 && resistance == 2) {
+    return "pink";
+  } else {
+    return "blue";
+  };
+
+  };
 
 function createFeatures(neighborhoods) {
   // Create a GeoJSON layer for the neighborhood boundaries
@@ -80,17 +93,14 @@ function createMap(neighborhoods) {
     accessToken: API_KEY
   });
 
-  console.log(useOfForceData);
-
   let incidentMarker = [];
-  let timelineLayer = [];
-
+  
   // Loop through data
   useOfForceData.forEach(function (incident) {
     // create the markers
     let marker = L.circleMarker([incident.lat, incident.long], {
       color: "white",
-      fillColor: incidentColor(incident.severity_of_force),
+      fillColor: incidentColor(incident.severity_of_force, incident.severity_of_resistance),
       weight: 1,
       fillOpacity: 1,
       radius: 5
@@ -98,23 +108,9 @@ function createMap(neighborhoods) {
     .bindPopup(`<h3> Force Type: ${incident.police_use_of_force_type}`)
 
     incidentMarker.push(marker);
-
-    let timeline = L.timeline(useOfForceData, {
-      getInterval: function(feature) {
-        return {
-          start: feature.properties.time,
-          end: feature.properties.time + feature.properties.mag * 10000000
-        };
-      },
-      pointToLayer: onEachQuakeLayer,
-      onEachFeature: onEachEarthquake
-    });
-
   });
 
   let incidents = L.layerGroup(incidentMarker);
-
-
   
   // Define a baseMaps object to hold base layers
   let baseMaps = {
@@ -134,6 +130,28 @@ function createMap(neighborhoods) {
     zoom: 13.5,
     layers: [darkmap, neighborhoods, incidents]
   });
+
+  // Set the legend
+  let legend = L.control({position: 'bottomright'});
+
+  legend.onAdd = function (map) {
+
+    // Code from StackExchange to build up the legend
+    var div = L.DomUtil.create('div', 'info legend'),
+    grades = [1, 2, 3, 4, 5, 6, 7, 8],
+    labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+      div.innerHTML +=
+          '<i style="background:' + incidentColor(grades[i] + 1) + '"></i> ' +
+          grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    };
+
+    return div;
+  };
+  
+  legend.addTo(myMap);
  
   // Create layer control
   // Pass in our baseMaps and overlayMaps
@@ -142,30 +160,4 @@ function createMap(neighborhoods) {
     collapsed: false
   }).addTo(myMap);
 
-  // Adds timeline and timeline controls
-  let timelineControl = L.timelineSliderControl({
-    formatOutput: function(date) {
-      return new Date(date).toString();
-    }
-  });
-  timelineControl.addTo(map);
-  timelineControl.addTimelines(timelineLayer);
-  timelineLayer.addTo(map);
-
 };
-
-
-/*
-	1.) Geo Map: 
-			Default at the Neighborhood (You have to select a Neighborhood to populate data (defaults to blank))
-			Metric: 
-				Police Incidents
-				Dynamic parameter metric to swap to view Use of Force
-			Attributes:
-				Size: # of Incidents
-				Color: Severity
-            Filter: Crime Type, Income, Time, Race, Neighborhood, Precinct, Community, Year
-
-    - Select neighborhood from dropdown menu
-    - Populate the neighborhood with color coded markers based on severity of use of force
-*/
