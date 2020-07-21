@@ -119,6 +119,23 @@ function renderAxesY(newYScale, yAxis) {
   return yAxis;
 }
 
+// setup fill color
+let cValue = function(d) { 
+  if (chosenXAxis === "median_income") {
+    return d.income_group;
+  }
+  if (chosenXAxis === "race_use_of_force") {
+    return d.race_use_of_force_type
+  }
+  else {
+    return d.race_neighborhood_type
+  }
+},
+    color = d3.scaleOrdinal(d3.schemeCategory10);
+  
+
+
+
 // function used for updating circles group with a transition to
 // new circles
 function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
@@ -126,12 +143,43 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
   circlesGroup.transition()
     .duration(1000)
     .attr("cx", d => newXScale(d[chosenXAxis]))
-    .attr("cy", d => newYScale(d[chosenYAxis]));
+    .attr("cy", d => newYScale(d[chosenYAxis]))
+    .style("fill", function(d) {
+      return color(cValue(d))})
 
   return circlesGroup;
 }
 
-// function used for updating state labels with a transition
+function renderLegend(legend) {
+  
+  legend="";
+
+  console.log(legend)
+
+  legend = svg.selectAll(".legend")
+      .data(color.domain())
+      .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  // draw legend colored rectangles
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  // draw legend text
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d })
+    return legend;
+}
+
+// function used for updating circle labels with a transition
 function renderText(textGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 
   textGroup.transition()
@@ -173,11 +221,14 @@ function updateToolTip(chosenXAxis,chosenYAxis, circlesGroup) {
     .attr("class", "d3-tip")
     .offset([80, -60])
     .html(function(d) {
+      if (chosenXAxis === "median_income") {
+        return (`${d.neighborhood_name}<br>${label} $${d.median_income_text}<br>Income Group: ${d.income_group}<br>${yLabel} ${d[chosenYAxis]}`)
+      }
       if (chosenXAxis === "race_use_of_force") {
-        return (`${d.neighborhood_name}<br>${label} ${d[chosenXAxis]}%<br>${yLabel} ${d[chosenYAxis]}%`)
+        return (`${d.neighborhood_name}<br>${label} ${d.race_use_of_force_type} (${d[chosenXAxis]}%)<br>${yLabel} ${d[chosenYAxis]}`)
       }
       else {
-        return (`${d.neighborhood_name}<br>${label} ${d[chosenXAxis]}<br>${yLabel} ${d[chosenYAxis]}%`)
+        return (`${d.neighborhood_name}<br>${label} ${d.race_neighborhood_type} (${d[chosenXAxis]}%)<br>${yLabel} ${d[chosenYAxis]}`)
       }
     });
 
@@ -195,7 +246,7 @@ function updateToolTip(chosenXAxis,chosenYAxis, circlesGroup) {
   return circlesGroup;
 }
 
-// Retrieve data from the CSV file and execute everything below
+// Retrieve data from the json api and execute everything below
 d3.json('/api/nbh_bubble').then(function(data, err) {
   if (err) throw err;
 
@@ -209,7 +260,7 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
     stateData.median_income = +stateData.median_income;
   });
 
-  // xLinearScale function above csv import
+  // xLinearScale function above json import
   let xLinearScale = xScale(data, chosenXAxis);
   
   // Create y scale function
@@ -238,10 +289,11 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
     .classed("stateCircle",true)
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d[chosenYAxis]))
-    .attr("r", 13)
-    .attr("opacity", ".9");
+    .attr("r", 17)
+    .attr("opacity", ".9")
+    .style("fill", function(d) { return color(cValue(d));}) ;
 
-   // append state abbreviations
+   // append counts
    let textGroup = chartGroup.selectAll(".stateText")
    .data(data)
    .enter()
@@ -252,6 +304,30 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
    .attr("dy", 3)
    .attr("font-size", "10px")
    .text(function(d) {return d.neighborhood_id});
+
+  // draw legend
+  let legend = svg.selectAll(".legend")
+      .data(color.domain())
+      .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  // draw legend colored rectangles
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  // draw legend text
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d })
+
+  
 
   // Create group for 3 x-axis labels
   let labelsGroup = chartGroup.append("g")
@@ -271,7 +347,7 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
     .attr("y", 40)
     .attr("value", "race_neighborhood") // value to grab for event listener
     .classed("inactive", true)
-    .text("Neighborhood Demographics");
+    .text("Neighborhood Demographics (%)");
 
    let incomeLabel = labelsGroup.append("text")
    .classed("aText", true)
@@ -286,31 +362,32 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
   .attr("transform", `translate(${0 - margin.left/4}, ${(height/2)})`);
 
   // append y axis
-
-  let incidentLabel = yLabelsGroup.append("text")
+  let forceLabel = yLabelsGroup.append("text")
         .classed("aText", true)
         .classed("active", true)
         .attr("x", 0)
         .attr("y", 0 - 60)
         .attr("dy", "1em")
         .attr("transform", "rotate(-90)")
-        .attr("value", "cases_count")
-        .text("Police Incidents");
-        
-  let forceLabel = yLabelsGroup.append("text")
+        .attr("value", "police_use_of_force_cnt")
+        .text("Use of Force Cases");
+
+  let incidentLabel = yLabelsGroup.append("text")
         .classed("aText", true)
         .classed("inactive", true)
         .attr("x", 0)
-        .attr("y", 0 - 40)
+        .attr("y", 0 - 80)
         .attr("dy", "1em")
         .attr("transform", "rotate(-90)")
-        .attr("value", "police_use_of_force_cnt")
-        .text("Use of Force Cases");
-        
+        .attr("value", "cases_count")
+        .text("Police Incidents");
 
   
-  // updateToolTip function above csv import
+  // updateToolTip function above json api
    circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+
+//update legend
+legend = renderLegend(legend);
 
  // x axis labels event listener
   labelsGroup.selectAll("text")
@@ -337,6 +414,9 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
 
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
+
+        //update legend
+        legend = renderLegend(legend);
 
         // changes classes to change bold text
         if (chosenXAxis === "race_use_of_force") {
@@ -402,6 +482,10 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
+        //update legend
+        legend = renderLegend(legend);
+
+
         // changes classes to change bold text
         if (chosenYAxis === "police_use_of_force_cnt") {
           forceLabel
@@ -424,7 +508,6 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
   });
 
   
-
   }).catch(function(error) {
     console.log(error);
 });

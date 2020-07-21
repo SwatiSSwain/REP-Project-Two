@@ -1,10 +1,13 @@
 // Paths to the geoJSON files
 let minNbrhoods = "../static/data/Minneapolis_Neighborhoods.geojson";
+console.log(minNbrhoods)
 // Path to data
 let useOfForceData = neighborhood_use_of_force;
+console.log(useOfForceData)
 
 // Call the neighborhood data
 d3.json(minNbrhoods, function (data) {
+    console.log(data)
     createFeatures(data.features)
 });
 
