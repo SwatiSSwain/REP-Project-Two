@@ -151,13 +151,23 @@ function renderCircles(circlesGroup, newXScale, chosenXAxis, newYScale, chosenYA
   return circlesGroup;
 }
 
+function resetLegend(legend) {
+  // legend = svg.selectAll(".legend")
+  //     .data(color.domain())
+  //     .enter().append("g")
+  //     .attr("class", "legend")
+  //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+  legend.exit().remove();
+
+  renderLegend(legend) 
+
+  //return legend;
+}
 
 function renderLegend(legend) {  
 
-  //legend.exit().remove();
-
-  legend = svg.remove()
-      .selectAll(".legend")
+  legend = svg.selectAll(".legend")
       .data(color.domain())
       .enter().append("g")
       .attr("class", "legend")
@@ -176,7 +186,9 @@ function renderLegend(legend) {
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) { return d })
+      .text(function(d) { 
+        console.log(d)
+        return d })
     return legend;
 }
 
@@ -313,6 +325,7 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
       .attr("class", "legend")
       .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
+  
   // draw legend colored rectangles
   legend.append("rect")
       .attr("x", width - 18)
@@ -388,7 +401,7 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
    circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
 //update legend
-legend = renderLegend(legend);
+//legend = resetLegend(legend);
 
  // x axis labels event listener
   labelsGroup.selectAll("text")
@@ -417,7 +430,7 @@ legend = renderLegend(legend);
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
         //update legend
-        legend = renderLegend(legend);
+        legend = resetLegend(legend);
 
         // changes classes to change bold text
         if (chosenXAxis === "race_use_of_force") {
@@ -484,7 +497,7 @@ legend = renderLegend(legend);
         circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
         //update legend
-        legend = renderLegend(legend);
+        legend = resetLegend(legend);
 
 
         // changes classes to change bold text
