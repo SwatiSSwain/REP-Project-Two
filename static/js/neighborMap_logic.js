@@ -153,7 +153,7 @@ function createMap(neighborhoods) {
     grades = [0, 1, 2, 3, 4, 5, 6, 7, 8],
     labels = ["Resistance Unspecified/Other", "Not Severe / Not Severe", "Not Severe / More Severe", 
     "Not Severe / Least Severe", "Not Severe / Severe", "Severe / Severe", "Severe /More Severe", 
-    "Severe /Least Severe", "Severe / Not Sever"];
+    "Severe /Least Severe", "Severe / Not Severe"];
     div.innerHTML += `<h8><b><center> Severity of <br>Police Response / Subject Resistance</b></h8><br>`
 
     // loop through our density intervals and generate a label with a colored square for each interval
