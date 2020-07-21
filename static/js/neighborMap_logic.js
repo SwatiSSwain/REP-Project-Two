@@ -34,24 +34,20 @@ function style(feature) {
   };
 };
 
-/* severity: 2 most, 1 least
-   type of resistance: 4 most, 1 least
-*/
-
 function incidentColor(severity, resistance) {
-  if (severity == 2 && resistance == 4) {
+  if (severity == 2 && resistance == 1) {
     return "#F4511E";
-  } else if (severity = 2 && resistance == 3) {
-    return "#FB8C00";
   } else if (severity = 2 && resistance == 2) {
+    return "#FB8C00";
+  } else if (severity = 2 && resistance == 3) {
     return "#FDD835";
-  } else if (severity = 2 && resistance == 1) {
+  } else if (severity = 2 && resistance == 4) {
     return "#C0CA33";
-  } else if (severity = 1 && resistance == 4) {
+  } else if (severity = 1 && resistance == 1) {
     return "#00897B";
-  } else if (severity = 1 && resistance == 3) {
-    return "#039BE5";
   } else if (severity = 1 && resistance == 2) {
+    return "#039BE5";
+  } else if (severity = 1 && resistance == 3) {
     return "#9C27B0";
   } else {
     return "#F06292";
@@ -72,9 +68,9 @@ function legendColor(grade) {
 function createFeatures(neighborhoods) {
   // Create a GeoJSON layer for the neighborhood boundaries
   let minNeighborhoods = L.geoJSON(neighborhoods, {
-  onEachFeature: function (feature, layer) {
-      layer.bindPopup(`<h5> ${feature.properties.BDNAME} </h5>`)
-  },
+  // onEachFeature: function (feature, layer) {
+  //     layer.bindPopup(`<h5> ${feature.properties.BDNAME} </h5>`)
+  // },
   pointToLayer: function (feature) {
       return L.polyline (feature.geometry.coordinates)
   },
@@ -115,7 +111,11 @@ function createMap(neighborhoods) {
       fillOpacity: 1,
       radius: 5
     })
-    .bindPopup(`<h3> Force Type: ${incident.police_use_of_force_type}`)
+    .bindPopup(`<h6><b> Police Use of Force Type: </b> ${incident.police_use_of_force_type} </h6>
+    <h6><b> Police Use of Force Action: </b> ${incident.force_type_action} </h6><hr>
+    <h6><b> Subject Type of Resistance: </b> ${incident.type_of_resistance} </h6>
+    <h6><b> Subject Race: </b> ${incident.subject_race} </h6>
+    <h6><b> Subject Sex: </b> ${incident.subject_sex} </h6>`)
 
     incidentMarker.push(marker);
   });
