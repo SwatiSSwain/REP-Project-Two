@@ -99,10 +99,12 @@ function createMap(neighborhoods) {
 
     incidentMarker.push(marker);
 
-    let timeline = L.timeline(function (datetime) {
-      getInterval: {start: feature.properties.time,
-        end: feature.properties.time + feature.properties.mag * 10000000}
-
+    let timeline = L.timeline(useOfForceData, {
+      getInterval: function(feature) {
+        return {
+          start: feature.properties.time,
+          end: feature.properties.time + feature.properties.mag * 10000000
+        };
       },
       pointToLayer: onEachQuakeLayer,
       onEachFeature: onEachEarthquake
