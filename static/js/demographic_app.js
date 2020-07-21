@@ -3,51 +3,51 @@
 let demographics_data = demographics
 let income_data = income
 //console.log(demographics_data);
-//console.log(demographics_data["white_pct"]);
 //console.log(income_data);
 
-
-//console.log(labels)
-//console.log(values[0])
-
-demographics_data.forEach(function (incident) {
-  
-  white_pct = parseFloat(incident.white_pct)
-  console.log(white)
-})
-
-//var racepercent = demographics[0];
+var racepercent = demographics[0];
 //console.log(racepercent);
 //console.log(demographics_data.white_pct);
+demographics_data.forEach(function (incident) {
+    white_pct = parseFloat(incident.white_pct)
+    of_color_pct = parseFloat(incident.of_color_pct)
+    console.log(white_pct)
+  })
+income_data.forEach(function (incident) {
+    incomeless35000_percent = parseFloat(incident.incomeless35000_percent)
+    incomeless35to49_percent = parseFloat(incident.incomeless35to49_percent)
+    incomeless50to74_percent = parseFloat(incident.incomeless50to74_percent)
+    incomeless75to99_percent = parseFloat(incident.incomeless75to99_percent)
+    income100plus_percent = parseFloat(incident.income100plus_percent)
+    console.log(income100plus_percent)
+  })
 
-//demographics_data.forEach(function (demo) {
-  
-// demographics_data.forEach(function (demo) {
-//     let foo = demo.white_pct
-// // INCOME DEMOGRAPHICS BAR CHART
-// var data = [
-//     {
-//       y: ['>35,00', '35-49', '50-74', '75-99', '100+'],
-//       x: [71, 9, 9.2, 3, 7.7],
-//       type: 'bar',
-//       color: 'olive',
-//       orientation: "h"
-//     }
-//   ];
-//   Plotly.newPlot('bar', data);
-// )}; 
+// INCOME DEMOGRAPHICS BAR CHART
+// var labels = income_data[0]
+var data = [
+    {
+      y: ['>35,00', '35-49', '50-74', '75-99', '100+'],
+      x: [incomeless35000_percent, incomeless35to49_percent, incomeless50to74_percent, incomeless75to99_percent, income100plus_percent],
+    //   text: labels,
+      type: 'bar',
+      color: 'green',
+      orientation: "h"
+    }
+  ];
+  Plotly.newPlot('bar', data);
+
 // RACE DEMOGRAPHICS PIE CHRT 
-    // var data = [{
-    //     values: [26.3, 73.7],
-    //     labels: ['White', 'Of Colour'],
-    //     type: 'pie'
-    //   }];
+    var data = [{
+        values: [white_pct, of_color_pct],
+        labels: ['White', 'Of Colour'],
+        type: 'pie'
+      }];
       
-    //   var layout = {
-    //     height: 400,
-    //     width: 500
-    //   };
+      var layout = {
+        height: 400,
+        width: 500
+      };
       
-    //   Plotly.newPlot('pie', data, layout);
+      Plotly.newPlot('pie', data, layout);
 
 // Init();

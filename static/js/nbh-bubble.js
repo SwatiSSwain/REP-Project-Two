@@ -41,7 +41,7 @@ function responsivefy(svg) {
   }
 };
 
-  
+
 // svg params
 let svgWidth = 960;
 let svgHeight = 500;
@@ -125,10 +125,10 @@ let cValue = function(d) {
   if (chosenXAxis === "median_income") {
     return d.income_group;
   }
-  if (chosenXAxis === "race_use_of_force") {
+  else if (chosenXAxis === "race_use_of_force") {
     return d.race_use_of_force_type
   }
-  else {
+  else if (chosenXAxis === "race_neighborhood") {
     return d.race_neighborhood_type
   }
 },
@@ -158,20 +158,30 @@ function resetLegend(legend) {
   //     .attr("class", "legend")
   //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-  legend.exit().remove();
+  legend.exit().remove()
+  //legend.exit().remove("g")
 
+  
+  callLegend(legend) 
+
+  return legend;
+}
+
+function callLegend(legend){
   renderLegend(legend) 
 
-  //return legend;
+  return legend;
 }
 
 function renderLegend(legend) {  
 
-  legend = svg.selectAll(".legend")
-      .data(color.domain())
-      .enter().append("g")
-      .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+  legend = svg
+         .selectAll(".legend")
+         .data(color.domain())
+         .enter()
+         .append("g")
+         .attr("class", "legend")
+         .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
   // draw legend colored rectangles
   legend.append("rect")
@@ -206,58 +216,58 @@ function renderText(textGroup, newXScale, chosenXAxis, newYScale, chosenYAxis) {
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis,chosenYAxis, circlesGroup) {
   
-//select x label
-  let label="";
+  //select x label
+    let label="";
+    
+    if (chosenXAxis === "race_use_of_force") {
+      label = "Subject Race: ";
+    }
+    else if (chosenXAxis === "race_neighborhood") {
+        label = "Neighborhood Demographics: "
+    }
+    else if (chosenXAxis === "median_income"){
+      label = "Household Income: ";
+    }
+    
+  //select y label
+    let yLabel="";  
+    
+    if (chosenYAxis === "police_use_of_force_cnt") {
+      yLabel = "Use of Force Cases: ";
+    }
+    else if (chosenYAxis === "cases_count") {
+        yLabel = "Police Incidents: "
+    }
+    
   
-  if (chosenXAxis === "race_use_of_force") {
-    label = "Subject Race: ";
-  }
-  else if (chosenXAxis === "race_neighborhood") {
-      label = "Neighborhood Demographics: "
-  }
-  else if (chosenXAxis === "median_income"){
-    label = "Household Income: ";
-  }
+    let toolTip = d3.tip()
+      .attr("class", "d3-tip")
+      .offset([80, -60])
+      .html(function(d) {
+        if (chosenXAxis === "median_income") {
+          return (`${d.neighborhood_name}<br>${label} $${d.median_income_text}<br>Income Group: ${d.income_group}<br>${yLabel} ${d[chosenYAxis]}`)
+        }
+        if (chosenXAxis === "race_use_of_force") {
+          return (`${d.neighborhood_name}<br>${label} ${d.race_use_of_force_type} (${d[chosenXAxis]}%)<br>${yLabel} ${d[chosenYAxis]}`)
+        }
+        else {
+          return (`${d.neighborhood_name}<br>${label} ${d.race_neighborhood_type} (${d[chosenXAxis]}%)<br>${yLabel} ${d[chosenYAxis]}`)
+        }
+      });
   
-//select y label
-  let yLabel="";  
+    circlesGroup.call(toolTip);
   
-  if (chosenYAxis === "police_use_of_force_cnt") {
-    yLabel = "Use of Force Cases: ";
-  }
-  else if (chosenYAxis === "cases_count") {
-      yLabel = "Police Incidents: "
-  }
+    circlesGroup.on("mouseover", function(data) {
+      toolTip.show(data);
+    })
   
-
-  let toolTip = d3.tip()
-    .attr("class", "d3-tip")
-    .offset([80, -60])
-    .html(function(d) {
-      if (chosenXAxis === "median_income") {
-        return (`${d.neighborhood_name}<br>${label} $${d.median_income_text}<br>Income Group: ${d.income_group}<br>${yLabel} ${d[chosenYAxis]}`)
-      }
-      if (chosenXAxis === "race_use_of_force") {
-        return (`${d.neighborhood_name}<br>${label} ${d.race_use_of_force_type} (${d[chosenXAxis]}%)<br>${yLabel} ${d[chosenYAxis]}`)
-      }
-      else {
-        return (`${d.neighborhood_name}<br>${label} ${d.race_neighborhood_type} (${d[chosenXAxis]}%)<br>${yLabel} ${d[chosenYAxis]}`)
-      }
+    // onmouseout event
+    .on("mouseout", function(data, index) {
+    toolTip.hide(data);
     });
-
-  circlesGroup.call(toolTip);
-
-  circlesGroup.on("mouseover", function(data) {
-    toolTip.show(data);
-  })
-
-  // onmouseout event
-  .on("mouseout", function(data, index) {
-  toolTip.hide(data);
-  });
-
-  return circlesGroup;
-}
+  
+    return circlesGroup;
+  }
 
 // Retrieve data from the json api and execute everything below
 d3.json('/api/nbh_bubble').then(function(data, err) {
@@ -400,9 +410,6 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
   // updateToolTip function above json api
    circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
 
-//update legend
-//legend = resetLegend(legend);
-
  // x axis labels event listener
   labelsGroup.selectAll("text")
     .on("click", function() {
@@ -526,7 +533,3 @@ d3.json('/api/nbh_bubble').then(function(data, err) {
     console.log(error);
 });
 
-
-
-// When the browser loads, makeResponsive() is called.
-//makeResponsive();
