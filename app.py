@@ -127,7 +127,7 @@ def cluster():
     columns_data3 = ['Race & Resistance Type', 'Cluster Severity - High', 'Cluster Severity - Medium', 'Cluster Severity - Low']
 
     #Query 
-    cur.execute("select * from cluster_ndb order by cluster1_high DESC, cluster2_med DESC, cluster3_low DESC;")
+    cur.execute("select * from cluster_ndb_1 order by cluster1_high DESC, cluster2_med DESC, cluster3_low DESC;")
     cluster_nbd= cur.fetchall()
     
     return render_template("crime-cluster.html",cluster_nbd=cluster_nbd, columns_data3=columns_data3 )
