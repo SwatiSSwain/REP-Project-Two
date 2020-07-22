@@ -1,0 +1,88 @@
+neighborhood_id,name,community_id
+1,Armatage,10
+2,East Harriet,10
+3,Fulton,10
+4,Kenny,10
+5,King Field,10
+6,Linden Hills,10
+7,Lynnhurst,10
+8,Tangletown,10
+9,Windom,10
+10,Audubon Park,7
+11,Beltrami,7
+12,Bottineau,7
+13,Columbia,7
+14,Holland,7
+15,Logan Park,7
+16,Marshall Terrace,7
+17,Northeast Park,7
+18,Sheridan,7
+19,St Anthony East,7
+20,St Anthony West,7
+21,Waite Park,7
+22,Windom Park,7
+23,Bancroft,9
+24,Bryant,9
+25,Central,9
+26,Corcoran,9
+27,Lyndale,9
+28,Powderhorn Park,9
+29,Standish,9
+30,Whittier,9
+31,Bryn Mawr,1
+32,South Uptown,1
+33,Cedar - Isles - Dean,1
+34,East Isles,1
+35,ECCO,1
+36,Kenwood,1
+37,Lowry Hill,1
+38,Lowry Hill East,1
+39,West Calhoun,1
+40,Camden Industrial Area,2
+41,Cleveland,2
+42,Folwell,2
+43,Humboldt Indust Area,2
+44,Lind - Bohanon,2
+45,Mckinley,2
+46,Shingle Creek,2
+47,Victory,2
+48,Webber - Camden,2
+49,Cedar Riverside,11
+50,Como,11
+51,Marcy Holmes,11
+52,Mid City Industrial Ar,11
+53,Nicollet Is/East Bank,11
+54,Prospect Park - East River Road,11
+55,University,11
+56,Cooper,4
+57,Hiawatha,4
+58,Howe,4
+59,Longfellow,4
+60,Seward,4
+61,Diamond Lake,6
+62,Ericsson,6
+63,Field,6
+64,Hale,6
+65,Keewaydin,6
+66,Minnehaha,6
+67,Morris Park,6
+68,Northrop,6
+69,Page,6
+70,Regina,6
+71,Wenonah,6
+72,Downtown East,3
+73,Downtown West,3
+74,Elliot Park,3
+75,Loring Park,3
+76,North Loop,3
+77,Steven's Square - Loring Heights,3
+78,East Phillips,8
+79,Midtown Phillips,8
+80,Phillips West,8
+81,Ventura Village,8
+82,Harrison,5
+83,Hawthorne,5
+84,Jordan,5
+85,Near - North,5
+86,Sumner - Glenwood,5
+87,Willard - Hay,5
