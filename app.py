@@ -15,7 +15,7 @@ from urllib.parse import urlparse
 print(os.environ.get("DATABASE_URL"))
 
 
-os.environ["DATABASE_URL"] = "postgres://fbcshsxigvoylt:10631d0d80106f558fa5dd4ba0c8aa0a0bdc227020cd09f7bfae6e75ec3fd4e8@ec2-3-215-207-12.compute-1.amazonaws.com:5432/de5fjc5oru29o5"
+#os.environ["DATABASE_URL"] = "postgres://fbcshsxigvoylt:10631d0d80106f558fa5dd4ba0c8aa0a0bdc227020cd09f7bfae6e75ec3fd4e8@ec2-3-215-207-12.compute-1.amazonaws.com:5432/de5fjc5oru29o5"
 
 if "DATABASE_URL" in os.environ :
     url = urlparse(os.environ.get('DATABASE_URL'))
